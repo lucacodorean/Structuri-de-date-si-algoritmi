@@ -1,0 +1,32 @@
+function make_copy(list) do
+    if list is NULL do
+        return NULL
+    end 
+    else do 
+        new_list = (NodeT*)calloc(1,sizeof(NodeT)) 
+        new_list->key = list->key
+        new_list->next = make_copy(new_list->next)
+        return new_list
+    end
+end
+
+function search_and_replace(list, new_value) do
+    set copy = NULL
+    set temp = list
+    while temp is not NULL do
+        set cate = 0 
+        copy = make_copy(list)
+        while copy is not NULL do
+            if temp->key == copy->key do
+                cate++
+            end
+        end
+
+        if cate == 1 do
+            temp->key = new_value
+        end
+        temp = temp -> next
+    end
+    free(copy)
+    copy = NULL
+end

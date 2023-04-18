@@ -1,0 +1,29 @@
+function search(list, given_key) do 
+    while list is not NULL do
+        if(stack->key is given_key) do 
+            return 1
+        end
+    end
+    return 0
+end
+
+
+function find_duplicate(head, stack) do 
+    set result = 0              /// contorul de duplicate
+    while head is not NULL do 
+        for(list = head->next; list!=NULL; list = list->next) do 
+            if list->key is head->key and search(stack, list->key) is not 1 do
+                result++
+                link_to_list(stack, list->key)
+                break
+            end
+        end
+        head = head -> next
+    end
+    return result
+end
+
+/*
+    Din punct de vedere al complexitatii alogritmul este O(n^2), intrucat pentru fiecare
+    element din lista se realizeaza o parcurgere individuala.
+*/

@@ -1,0 +1,20 @@
+/*
+    Intrucat trebuie sa parcurgem "de la caoda spre cap", am avea nevoie 
+    de un pointer care sa ne retina adresa capatului listei, respectiv
+    cine se afla inaintea elementului curent, pentru a putea lega elementul
+    curent spre elementul sau anterior
+*/
+
+function reverse(list) do
+    set head = list 
+    set prev = NULL
+    set aux = NULL
+    while head is not NULL do 
+        aux = head->next 
+        head-> next = prev
+        prev = head
+        head = aux
+    end
+
+    head = prev
+end
