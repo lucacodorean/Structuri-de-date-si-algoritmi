@@ -26,7 +26,7 @@ typedef struct {
 
 GRAPH* init_graph(int);
 void   init_adj_list(GRAPH*, FILE*);
-int    DFS_cycle(int, GRAPH*);
+int    DFS_cycle(int, GRAPH*, int*);
 int    has_cycle(GRAPH*);
 void   DFS(int, GRAPH*, int*, NodeT**);
 void   top_sort(GRAPH*, FILE*);
@@ -128,43 +128,43 @@ void DFS(int current_vertex, GRAPH* my_graph, int* time, NodeT** list) {
     my_graph->finish[current_vertex] = ++(*time);
 }
 
-int DFS_cycle(int current_vertex, GRAPH* graph) {
-    if(graph->viz[current_vertex] == VISITED) return HAS_CYCLE;
+int DFS_cycle(int current_vertex, GRAPH* graph, int* visited) {
 
     int cycle = NO_CYCLE;
     graph->viz[current_vertex] = VISITED;
+    visited[current_vertex] = VISITED;
     NodeT* adj_list = graph->adj[current_vertex];
 
     while(adj_list != NULL) {
-        cycle = DFS_cycle(adj_list->key, graph);
-        if(cycle == 1) return HAS_CYCLE;
+        if(graph->viz[adj_list->key] == NOT_VISITED) {
+            cycle = DFS_cycle(adj_list->key, graph, visited);
+            if(cycle == 1) return HAS_CYCLE;
+        } else if (visited[adj_list->key] == VISITED) return HAS_CYCLE;
         
         adj_list = adj_list->next;
     }
     
+    visited[current_vertex] = NOT_VISITED;
     return NO_CYCLE;
 }
 
 int has_cycle(GRAPH* graph) { 
     
     int cycle = NO_CYCLE;
+    int* visited = (int*)calloc(graph->vertexes_number, sizeof(int));
 
     for(size_t i = 0; i<=(size_t)graph->vertexes_number; i++) {
         graph->viz[i] = NOT_VISITED;
     }
 
    for(size_t current_vertex = 1; current_vertex<=(size_t)graph->vertexes_number; current_vertex++) {
-        graph->viz[current_vertex] = VISITED;
-        
         NodeT* adj_list = graph->adj[current_vertex];
 
         while(adj_list != NULL) {
-            cycle = DFS_cycle(adj_list->key, graph);      
+            cycle = DFS_cycle(adj_list->key, graph, visited);      
             if(cycle == 1) return HAS_CYCLE;      
             adj_list = adj_list->next;
         }
-
-        graph->viz[current_vertex] = NOT_VISITED;
     }
 
     return NO_CYCLE;
@@ -173,7 +173,6 @@ int has_cycle(GRAPH* graph) {
 void top_sort(GRAPH* graph, FILE* path) {
     int time = 0;
     int no_parent = -1;
-
 
     for(size_t i = 0; i<=(size_t)graph->vertexes_number; i++) {
         graph->viz[i] = NOT_VISITED;
