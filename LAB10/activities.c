@@ -61,9 +61,9 @@ void init_activities(ACTIVITY* arr, FILE* path, int size) {
 }
 
 void swap(ACTIVITY* first, ACTIVITY* second) {
-     ACTIVITY aux = *first;
-     *first = *second;
-     *second = aux;
+    ACTIVITY aux = *first;
+    *first = *second;
+    *second = aux;
 }
 
 void sort(ACTIVITY* arr, int size) {
